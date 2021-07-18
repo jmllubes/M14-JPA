@@ -15,14 +15,13 @@ public class BotigaService {
 	private BotigaRepository botigaRepository;
 
 	public List<Botiga> getAll() {
-		List<Botiga> botigues = new ArrayList<>();
-		botigaRepository.findAll().forEach(botigues::add);
+		List<Botiga> botigues = botigaRepository.findAll();
+
 		return botigues;
 	}
-	
+
 	public List<Quadre> getAllQuadres(Botiga b) {
-		List<Quadre> quadres = new ArrayList<>();
-		quadres = b.getQuadres();
+		List<Quadre> quadres = b.getQuadres();
 		return quadres;
 	}
 

@@ -8,6 +8,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Botiga;
 import com.example.demo.model.Quadre;
@@ -24,41 +26,44 @@ import com.example.demo.repository.QuadreRepository;
 import com.example.demo.service.BotigaService;
 import com.example.demo.service.QuadreService;
 
-@Controller
+@RestController
 public class controlador {
 
+	@Autowired
+	private BotigaRepository botigaRepository;
 	@Autowired
 	private BotigaService botigaService;
 
 	@Autowired
 	private QuadreService quadreService;
 
-	@RequestMapping("/shops")
+	@GetMapping("/shops")
 	public List<Botiga> getAllBotiga() {
 		return botigaService.getAll();
 	}
 
-	@RequestMapping(value = "/shops", method = RequestMethod.POST)
+	@PostMapping("/shops")
 	public void addBotiga(@RequestBody Botiga botiga) {
 		botigaService.add(botiga);
 	}
-	
-	
-	@RequestMapping("/shops/{id}/pictures")
+
+	@GetMapping("/shops/{id}/pictures")
 	public List<Quadre> getAllQuadre() {
 		return quadreService.getAll();
 	}
 
-	@RequestMapping(value = "/shops", method = RequestMethod.POST)
-	public void addQuadre(@RequestParam String nom, String autor) {
+	@PostMapping("/shops/{id}/pictures")
+	public void addQuadre(@RequestParam String nom, String autor, @PathVariable int id) {
 		Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-		Quadre q = new Quadre(timestamp,nom,0,autor,null);
+		Botiga b = botigaRepository.findById(id);
+		Quadre q = new Quadre(timestamp, nom, 0, autor, b);
 		quadreService.add(q);
 	}
-	
-	@RequestMapping(value = "/shops/{id}/pictures", method = RequestMethod.DELETE)
+
+	@DeleteMapping("/shops/{id}/pictures")
 	public void deleteQuadre(@PathVariable int id) {
-		quadreService.delete(id);;
+		quadreService.delete(id);
+		;
 	}
-	
+
 }

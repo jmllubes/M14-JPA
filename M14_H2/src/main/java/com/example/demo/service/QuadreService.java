@@ -21,8 +21,7 @@ public class QuadreService {
 	private BotigaService botigaService;
 
 	public List<Quadre> getAll() {
-		List<Quadre> quadres = new ArrayList<>();
-		quadreRepository.findAll().forEach(quadres::add);
+		List<Quadre> quadres = quadreRepository.findAll();
 		return quadres;
 	}
 
